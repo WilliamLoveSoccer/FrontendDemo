@@ -13,7 +13,13 @@ import {
   TableCell,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent, CardAction } from "@/components/ui/card"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardAction,
+} from "@/components/ui/card"
 import { ChevronLeft, ChevronRight, Plus, Users } from "lucide-react"
 import type { Alert } from "@/types"
 
@@ -36,7 +42,11 @@ export function AlertsTable() {
           <CardTitle>Recent Alerts</CardTitle>
           <CardAction>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setGroupDialogOpen(true)}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setGroupDialogOpen(true)}
+              >
                 <Users />
                 Create Group
               </Button>
@@ -61,21 +71,30 @@ export function AlertsTable() {
             <TableBody>
               {isLoading && (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={5}
+                    className="py-8 text-center text-muted-foreground"
+                  >
                     Loading…
                   </TableCell>
                 </TableRow>
               )}
               {error && (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-8 text-center text-destructive">
+                  <TableCell
+                    colSpan={5}
+                    className="py-8 text-center text-destructive"
+                  >
                     Failed to load alerts.
                   </TableCell>
                 </TableRow>
               )}
               {!isLoading && !error && data?.items.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={5}
+                    className="py-8 text-center text-muted-foreground"
+                  >
                     No alerts yet.
                   </TableCell>
                 </TableRow>
@@ -118,9 +137,18 @@ export function AlertsTable() {
         </CardContent>
       </Card>
 
-      <StatusDialog alert={selectedAlert} onClose={() => setSelectedAlert(null)} />
-      <CreateAlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen} />
-      <CreateGroupDialog open={groupDialogOpen} onOpenChange={setGroupDialogOpen} />
+      <StatusDialog
+        alert={selectedAlert}
+        onClose={() => setSelectedAlert(null)}
+      />
+      <CreateAlertDialog
+        open={alertDialogOpen}
+        onOpenChange={setAlertDialogOpen}
+      />
+      <CreateGroupDialog
+        open={groupDialogOpen}
+        onOpenChange={setGroupDialogOpen}
+      />
     </>
   )
 }

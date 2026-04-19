@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createAlert } from "@/api/alerts"
+import { createAlert } from "@/services/alerts"
 import type { CreateAlertPayload } from "@/types"
 
 export function useCreateAlert() {

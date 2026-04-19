@@ -1,5 +1,5 @@
 import type { Alert, AlertStatus, AlertsPage, CreateAlertPayload } from "@/types"
-import { apiClient } from "./client"
+import { apiClient } from "./apiClient"
 
 export async function fetchAlerts(page: number, pageSize: number): Promise<AlertsPage> {
   const { data } = await apiClient.get<AlertsPage>("/v1/alerts", {

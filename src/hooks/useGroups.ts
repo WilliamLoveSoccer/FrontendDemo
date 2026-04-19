@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { fetchGroups } from "@/api/groups"
+import { fetchGroups } from "@/services/groups"
 
 export function useGroups() {
   return useQuery({

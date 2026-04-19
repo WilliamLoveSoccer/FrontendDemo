@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select } from "@/components/ui/select"
+import { MultiSelect } from "@/components/ui/multi-select"
 
 interface CreateAlertDialogProps {
   open: boolean
@@ -25,7 +25,7 @@ export function CreateAlertDialog({ open, onOpenChange }: CreateAlertDialogProps
 
   const [title, setTitle] = useState("")
   const [body, setBody] = useState("")
-  const [groupId, setGroupId] = useState("")
+  const [groupIds, setGroupIds] = useState<string[]>([])
 
   const errorMessage =
     error instanceof Error ? error.message : error ? "Failed to create alert." : null
@@ -33,7 +33,7 @@ export function CreateAlertDialog({ open, onOpenChange }: CreateAlertDialogProps
   function resetForm() {
     setTitle("")
     setBody("")
-    setGroupId("")
+    setGroupIds([])
   }
 
   function handleOpenChange(next: boolean) {
@@ -43,9 +43,9 @@ export function CreateAlertDialog({ open, onOpenChange }: CreateAlertDialogProps
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!title.trim() || !groupId) return
+    if (!title.trim() || groupIds.length === 0) return
     createAlert(
-      { title: title.trim(), body: body.trim() || undefined, groupIds: [Number(groupId)] },
+      { title: title.trim(), body: body.trim() || undefined, groupIds: groupIds.map(Number) },
       {
         onSuccess: () => {
           resetForm()
@@ -55,12 +55,14 @@ export function CreateAlertDialog({ open, onOpenChange }: CreateAlertDialogProps
     )
   }
 
+  const groupOptions = groups.map((g) => ({ value: String(g.id), label: g.name }))
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Alert</DialogTitle>
-          <DialogDescription>Send an alert to a recipient group.</DialogDescription>
+          <DialogDescription>Send an alert to one or more recipient groups.</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -88,23 +90,15 @@ export function CreateAlertDialog({ open, onOpenChange }: CreateAlertDialogProps
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="alert-group">Group *</Label>
-            <Select
+            <Label htmlFor="alert-group">Groups *</Label>
+            <MultiSelect
               id="alert-group"
-              value={groupId}
-              onChange={(e) => setGroupId(e.target.value)}
+              options={groupOptions}
+              value={groupIds}
+              onChange={setGroupIds}
+              placeholder={groupsLoading ? "Loading groups…" : "Select groups"}
               disabled={groupsLoading}
-              required
-            >
-              <option value="">
-                {groupsLoading ? "Loading groups…" : "Select a group"}
-              </option>
-              {groups.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.name}
-                </option>
-              ))}
-            </Select>
+            />
           </div>
 
           {errorMessage && (
@@ -115,7 +109,7 @@ export function CreateAlertDialog({ open, onOpenChange }: CreateAlertDialogProps
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending || !title.trim() || !groupId}>
+            <Button type="submit" disabled={isPending || !title.trim() || groupIds.length === 0}>
               {isPending ? "Sending…" : "Send Alert"}
             </Button>
           </div>
